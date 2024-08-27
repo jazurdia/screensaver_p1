@@ -1,3 +1,5 @@
 # ninja log v6
 3	697	7464882275906747	CMakeFiles/screensaver_p1.dir/main.c.obj	d019f20441c42b97
 699	886	7464882282868622	screensaver_p1.exe	dbde91a375fc78ce
+2	478	7464891933536823	CMakeFiles/screensaver_p1.dir/src/main.c.obj	b0fa94b2cc76c335
+479	608	7464891938305348	screensaver_p1.exe	d159b430ef8a1c06
