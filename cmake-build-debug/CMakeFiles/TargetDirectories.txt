@@ -1,0 +1,3 @@
+C:/coding/CP/screensaver-p1/cmake-build-debug/CMakeFiles/screensaver_p1.dir
+C:/coding/CP/screensaver-p1/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/coding/CP/screensaver-p1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
