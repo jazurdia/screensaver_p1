@@ -79,7 +79,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "28"
+			"value" : "29"
 		},
 		{
 			"name" : "CMAKE_CACHE_PATCH_VERSION",
@@ -91,7 +91,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "1"
+			"value" : "6"
 		},
 		{
 			"name" : "CMAKE_COLOR_DIAGNOSTICS",
@@ -154,7 +154,7 @@
 					"value" : "C compiler"
 				}
 			],
-			"type" : "FILEPATH",
+			"type" : "STRING",
 			"value" : "C:/Users/aleaz/AppData/Local/Programs/CLion/bin/mingw/bin/gcc.exe"
 		},
 		{
@@ -895,7 +895,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "C:/Users/aleaz/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-3.28"
+			"value" : "C:/Users/aleaz/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-3.29"
 		},
 		{
 			"name" : "CMAKE_SHARED_LINKER_FLAGS",
@@ -1219,7 +1219,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "mingw32;-mwindows;C:/coding/CP/SDL2-devel-2.30.6-mingw/SDL2-2.30.6/x86_64-w64-mingw32/lib/libSDL2main.a;mingw32;-mwindows;C:/coding/CP/SDL2-devel-2.30.6-mingw/SDL2-2.30.6/x86_64-w64-mingw32/lib/libSDL2main.a;mingw32;-mwindows;C:/coding/CP/SDL2-devel-2.30.6-mingw/SDL2-2.30.6/x86_64-w64-mingw32/lib/libSDL2main.a;mingw32;-mwindows;C:/coding/CP/SDL2-devel-2.30.6-mingw/SDL2-2.30.6/x86_64-w64-mingw32/lib/libSDL2main.a;mingw32;-mwindows;C:/coding/CP/SDL2-devel-2.30.6-mingw/SDL2-2.30.6/x86_64-w64-mingw32/lib/libSDL2main.a;C:/coding/CP/SDL2-devel-2.30.6-mingw/SDL2-2.30.6/x86_64-w64-mingw32/lib/libSDL2.dll.a"
+			"value" : "mingw32;-mwindows;C:/coding/CP/SDL2-devel-2.30.6-mingw/SDL2-2.30.6/x86_64-w64-mingw32/lib/libSDL2main.a;mingw32;-mwindows;C:/coding/CP/SDL2-devel-2.30.6-mingw/SDL2-2.30.6/x86_64-w64-mingw32/lib/libSDL2main.a;mingw32;-mwindows;C:/coding/CP/SDL2-devel-2.30.6-mingw/SDL2-2.30.6/x86_64-w64-mingw32/lib/libSDL2main.a;C:/coding/CP/SDL2-devel-2.30.6-mingw/SDL2-2.30.6/x86_64-w64-mingw32/lib/libSDL2.dll.a"
 		},
 		{
 			"name" : "_CMAKE_LINKER_PUSHPOP_STATE_SUPPORTED",

@@ -9,7 +9,10 @@ set(SDL2_PATH "C:/coding/CP/SDL2-devel-2.30.6-mingw/SDL2-2.30.6/x86_64-w64-mingw
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIR})
 
-add_executable(screensaver_p1 src/main.c)
+add_executable(screensaver_p1 src/main.c
+        src/config.h
+        src/sweeping_line.h
+        src/sweeping_line.c)
 
 
 target_link_libraries(screensaver_p1 ${SDL2_LIBRARY})
