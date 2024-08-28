@@ -2,6 +2,7 @@
 #include "sweeping_line.h"
 #include "config.h"
 #include <stdlib.h>
+#include <omp.h>
 
 /**
  * Constructor de SweepingLine
@@ -46,6 +47,7 @@ bool update_sweeping_line(SweepingLine *line, SweepingLine **lines, int *num_lin
     if (line->y <= 0 || line->y + line->width >= SCREEN_HEIGHT) line->dy = -line->dy;
 
     if (line->collision_cooldown <= 0) {
+#pragma omp parallel for
         for (int i = 0; i < *num_lines; i++) {
             if (&(*lines)[i] != line) {
                 int distance_x = abs((*lines)[i].x - line->x);
@@ -66,9 +68,13 @@ bool update_sweeping_line(SweepingLine *line, SweepingLine **lines, int *num_lin
                         if (*num_lines < MAX_LINES) {
                             SweepingLine new_line;
                             init_sweeping_line(&new_line, rand() % SCREEN_WIDTH, rand() % SCREEN_HEIGHT, (rand() % 2 == 0) ? 1 : -1, (rand() % 2 == 0) ? 1 : -1, 20 + rand() % 100, 20 + rand() % 100, 1 + rand() % 5, (SDL_Color){rand() % 256, rand() % 256, rand() % 256, 255});
-                            *lines = realloc(*lines, (*num_lines + 1) * sizeof(SweepingLine));
-                            (*lines)[*num_lines] = new_line;
-                            (*num_lines)++;
+                            #pragma omp critical
+                            {
+                                // Añadir nueva línea
+                                *lines = realloc(*lines, (*num_lines + 1) * sizeof(SweepingLine));
+                                (*lines)[*num_lines] = new_line;
+                                (*num_lines)++;
+                            }
                         }
                         return true;
                     }

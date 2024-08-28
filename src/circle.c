@@ -3,6 +3,7 @@
 #include "config.h"
 #include <math.h>
 #include <stdlib.h>
+#include <omp.h>
 
 /**
  * Constructor de Circle
@@ -47,6 +48,7 @@ bool update_circle(Circle *circle, SweepingLine *lines, int num_lines, Circle **
     if (circle->y - circle->radius <= 0 || circle->y + circle->radius >= SCREEN_HEIGHT) circle->dy = -circle->dy;
 
     if (circle->collision_cooldown <= 0) {
+#pragma omp parallel for
         for (int i = 0; i < num_lines; i++) {
             int distance_x = abs(lines[i].x - circle->x);
             int distance_y = abs(lines[i].y - circle->y);
@@ -60,9 +62,12 @@ bool update_circle(Circle *circle, SweepingLine *lines, int num_lines, Circle **
                 if (*num_circles < MAX_CIRCLES) {
                     Circle new_circle;
                     init_circle(&new_circle, rand() % SCREEN_WIDTH, rand() % SCREEN_HEIGHT, (rand() % 2 == 0) ? 1 : -1, (rand() % 2 == 0) ? 1 : -1, 20 + rand() % 30, 5 + rand() % 5, (SDL_Color){rand() % 256, rand() % 256, rand() % 256, 255});
-                    *circles = realloc(*circles, (*num_circles + 1) * sizeof(Circle));
-                    (*circles)[*num_circles] = new_circle;
-                    (*num_circles)++;
+                    #pragma omp critical
+                    {
+                        *circles = realloc(*circles, (*num_circles + 1) * sizeof(Circle));
+                        (*circles)[*num_circles] = new_circle;
+                        (*num_circles)++;
+                    }
                 }
                 return true;
             }
@@ -70,6 +75,7 @@ bool update_circle(Circle *circle, SweepingLine *lines, int num_lines, Circle **
     }
 
     if (circle->collision_cooldown <= 0) {
+    #pragma omp parallel for
         for (int i = 0; i < *num_circles; i++) {
             if (&(*circles)[i] != circle) {
                 int distance = sqrt(pow((*circles)[i].x - circle->x, 2) + pow((*circles)[i].y - circle->y, 2));
@@ -86,9 +92,13 @@ bool update_circle(Circle *circle, SweepingLine *lines, int num_lines, Circle **
                         if (*num_circles < MAX_CIRCLES) {
                             Circle new_circle;
                             init_circle(&new_circle, rand() % SCREEN_WIDTH, rand() % SCREEN_HEIGHT, (rand() % 2 == 0) ? 1 : -1, (rand() % 2 == 0) ? 1 : -1, 20 + rand() % 30, 5 + rand() % 5, (SDL_Color){rand() % 256, rand() % 256, rand() % 256, 255});
-                            *circles = realloc(*circles, (*num_circles + 1) * sizeof(Circle));
-                            (*circles)[*num_circles] = new_circle;
-                            (*num_circles)++;
+
+                            #pragma omp critical
+                            {
+                                *circles = realloc(*circles, (*num_circles + 1) * sizeof(Circle));
+                                (*circles)[*num_circles] = new_circle;
+                                (*num_circles)++;
+                            }
                         }
                         return true;
                     }
@@ -106,6 +116,7 @@ bool update_circle(Circle *circle, SweepingLine *lines, int num_lines, Circle **
  */
 void render_circle(Circle *circle, SDL_Renderer *renderer) {
     SDL_SetRenderDrawColor(renderer, circle->color.r, circle->color.g, circle->color.b, circle->color.a);
+#pragma omp parallel for // no se si esto esta bien
     for (int w = 0; w < circle->radius * 2; w++) {
         for (int h = 0; h < circle->radius * 2; h++) {
             int dx = circle->radius - w;
