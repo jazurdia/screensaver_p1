@@ -60,15 +60,18 @@ bool update_sweeping_line(SweepingLine *line, SweepingLine **lines, int *num_lin
                     line->dy = -line->dy;
                     line->collision_cooldown = 1000;
 
-                    // Crear nueva línea si no se ha alcanzado el límite
-                    if (*num_lines < MAX_LINES) {
-                        SweepingLine new_line;
-                        init_sweeping_line(&new_line, rand() % SCREEN_WIDTH, rand() % SCREEN_HEIGHT, (rand() % 2 == 0) ? 1 : -1, (rand() % 2 == 0) ? 1 : -1, 20 + rand() % 100, 20 + rand() % 100, 1 + rand() % 5, (SDL_Color){rand() % 256, rand() % 256, rand() % 256, 255});
-                        *lines = realloc(*lines, (*num_lines + 1) * sizeof(SweepingLine));
-                        (*lines)[*num_lines] = new_line;
-                        (*num_lines)++;
+                    // probabilidad del 30%
+                    if (rand() % 100 < PROB_REPR) {
+                        // Crear nueva línea si no se ha alcanzado el límite
+                        if (*num_lines < MAX_LINES) {
+                            SweepingLine new_line;
+                            init_sweeping_line(&new_line, rand() % SCREEN_WIDTH, rand() % SCREEN_HEIGHT, (rand() % 2 == 0) ? 1 : -1, (rand() % 2 == 0) ? 1 : -1, 20 + rand() % 100, 20 + rand() % 100, 1 + rand() % 5, (SDL_Color){rand() % 256, rand() % 256, rand() % 256, 255});
+                            *lines = realloc(*lines, (*num_lines + 1) * sizeof(SweepingLine));
+                            (*lines)[*num_lines] = new_line;
+                            (*num_lines)++;
+                        }
+                        return true;
                     }
-                    return true;
                 }
             }
         }

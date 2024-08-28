@@ -78,7 +78,7 @@ int main(int argc, char* argv[]) {
 
         if (frameTime > 0) {
             char title[100];
-            sprintf(title, "FPS: %.2f | Lines: %d | Circles: %d", 1000.0 / frameTime, num_lines, num_circles);
+            sprintf(title, "Lines: %d | Circles: %d | FPS: %.2f", num_lines, num_circles, 1000.0 / frameTime);
             SDL_SetWindowTitle(window, title);
         }
 
