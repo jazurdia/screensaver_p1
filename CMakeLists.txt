@@ -12,7 +12,9 @@ include_directories(${SDL2_INCLUDE_DIR})
 add_executable(screensaver_p1 src/main.c
         src/config.h
         src/sweeping_line.h
-        src/sweeping_line.c)
+        src/sweeping_line.c
+        src/circle.h
+        src/circle.c)
 
 
 target_link_libraries(screensaver_p1 ${SDL2_LIBRARY})

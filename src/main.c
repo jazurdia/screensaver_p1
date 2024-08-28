@@ -1,12 +1,17 @@
 #include <SDL.h>
 #include <stdbool.h>
 #include "config.h"
-#include "sweeping_line.h"
+#include <stdint.h>
+#include <stdio.h>
+#include <time.h>
+
+#include "circle.h"
 
 int main(int argc, char* argv[]) {
     SDL_Init(SDL_INIT_VIDEO);
+    clock_t start_time = clock();
 
-    SDL_Window *window = SDL_CreateWindow("Sweeping Lines",
+    SDL_Window *window = SDL_CreateWindow("Sweeping Lines and Circles",
                                           SDL_WINDOWPOS_CENTERED,
                                           SDL_WINDOWPOS_CENTERED,
                                           SCREEN_WIDTH, SCREEN_HEIGHT,
@@ -14,6 +19,7 @@ int main(int argc, char* argv[]) {
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     SweepingLine lines[NUM_LINES];
+    Circle circles[NUM_CIRCLES];
 
     // Inicializar líneas con posiciones, direcciones, y velocidades aleatorias
     for (int i = 0; i < NUM_LINES; ++i) {
@@ -21,19 +27,37 @@ int main(int argc, char* argv[]) {
         int y = rand() % SCREEN_HEIGHT;
         int dx = (rand() % 2 == 0) ? 1 : -1;
         int dy = (rand() % 2 == 0) ? 1 : -1;
-        // int length = 100; // Longitud de la línea
-        // int width = 5;    // Ancho de la línea
 
-        int length = 50 + rand() % 100; // Longitud aleatoria entre 50 y 150
-        int width = 1 + rand() % 10;     // Ancho aleatorio entre 1 y 10
+        int length = 10 + rand() % 100; // Longitud aleatoria entre 10 y 110
+        int width = 1 + rand() % 5; // Ancho aleatorio entre 1 y 5
 
         int speed = 1 + rand() % 5; // Velocidad aleatoria entre 1 y 5
         SDL_Color color = {rand() % 256, rand() % 256, rand() % 256, 255};
         init_sweeping_line(&lines[i], x, y, dx, dy, length, width, speed, color);
     }
 
+    // Inicializar círculos con posiciones, direcciones, y velocidades aleatorias
+    for (int i = 0; i < NUM_CIRCLES; ++i) {
+        int x = rand() % SCREEN_WIDTH;
+        int y = rand() % SCREEN_HEIGHT;
+        int dx = (rand() % 2 == 0) ? 1 : -1;
+        int dy = (rand() % 2 == 0) ? 1 : -1;
+        int radius = 10 + rand() % 30; // Radio aleatorio entre 10 y 40
+        int speed = 1 + rand() % 5; // Velocidad aleatoria entre 1 y 5
+        SDL_Color color = {rand() % 256, rand() % 256, rand() % 256, 255};
+        init_circle(&circles[i], x, y, dx, dy, radius, speed, color);
+    }
+
+
+
+    uint32_t frameStart, frameTime;
+    char title[] = "FPS: ";
+
     bool running = true;
     while (running) {
+        frameStart = SDL_GetTicks();
+        clock_t current_time = clock();
+        double elapsed_time = (double)(current_time - start_time) / CLOCKS_PER_SEC;
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
@@ -47,6 +71,19 @@ int main(int argc, char* argv[]) {
         for (int i = 0; i < NUM_LINES; ++i) {
             update_sweeping_line(&lines[i], lines, NUM_LINES);
             render_sweeping_line(&lines[i], renderer);
+        }
+
+        for (int i = 0; i < NUM_CIRCLES; ++i) {
+            update_circle(&circles[i], lines, NUM_LINES, circles, NUM_CIRCLES);
+            render_circle(&circles[i], renderer);
+        }
+
+        frameTime = SDL_GetTicks() - frameStart;
+
+        if (frameTime > 0) {
+            char title[50];
+            sprintf(title, "FPS: %.2f", 1000.0 / frameTime);
+            SDL_SetWindowTitle(window, title);
         }
 
         SDL_RenderPresent(renderer);

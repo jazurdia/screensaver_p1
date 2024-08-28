@@ -10,6 +10,8 @@ typedef struct {
     int width;
     int speed; // Velocidad individual de la línea
     SDL_Color color;
+    int collision_cooldown; // Tiempo de espera para evitar colisiones múltiples
+
 } SweepingLine;
 
 void init_sweeping_line(SweepingLine *line, int x, int y, int dx, int dy, int length, int width, int speed, SDL_Color color);
