@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
     int num_lines = NUM_LINES;
     SweepingLine *lines = malloc(num_lines * sizeof(SweepingLine));
     for (int i = 0; i < num_lines; ++i) {
-        init_sweeping_line(&lines[i], rand() % SCREEN_WIDTH, rand() % SCREEN_HEIGHT, (rand() % 2 == 0) ? 1 : -1, (rand() % 2 == 0) ? 1 : -1, 20 + rand() % 100, 5 + rand() % 5, 1 + rand() % 5, (SDL_Color){rand() % 256, rand() % 256, rand() % 256, 255});
+        init_sweeping_line(&lines[i], rand() % SCREEN_WIDTH, rand() % SCREEN_HEIGHT, (rand() % 2 == 0) ? 1 : -1, (rand() % 2 == 0) ? 1 : -1, 20 + rand() % 100, 20 + rand() % 100, 1 + rand() % 5, (SDL_Color){rand() % 256, rand() % 256, rand() % 256, 255});
     }
 
     int num_circles = NUM_CIRCLES;
