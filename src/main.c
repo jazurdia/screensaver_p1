@@ -77,8 +77,8 @@ int main(int argc, char* argv[]) {
         frameTime = SDL_GetTicks() - frameStart;
 
         if (frameTime > 0) {
-            char title[50];
-            sprintf(title, "FPS: %.2f", 1000.0 / frameTime);
+            char title[100];
+            sprintf(title, "FPS: %.2f | Lines: %d | Circles: %d", 1000.0 / frameTime, num_lines, num_circles);
             SDL_SetWindowTitle(window, title);
         }
 

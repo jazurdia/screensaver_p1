@@ -3,6 +3,18 @@
 #include "config.h"
 #include <stdlib.h>
 
+/**
+ * Constructor de SweepingLine
+ * @param line
+ * @param x
+ * @param y
+ * @param dx
+ * @param dy
+ * @param length
+ * @param width
+ * @param speed
+ * @param color
+ */
 void init_sweeping_line(SweepingLine *line, int x, int y, int dx, int dy, int length, int width, int speed, SDL_Color color) {
     line->x = x;
     line->y = y;
@@ -15,6 +27,13 @@ void init_sweeping_line(SweepingLine *line, int x, int y, int dx, int dy, int le
     line->collision_cooldown = 0;
 }
 
+/**
+ * Revisa el estado de la línea y actualiza su posición. Si colisiona con algo, se invierte su dirección y se crea una nueva línea.
+ * @param line
+ * @param lines
+ * @param num_lines
+ * @return
+ */
 bool update_sweeping_line(SweepingLine *line, SweepingLine **lines, int *num_lines) {
     line->x += line->dx * line->speed;
     line->y += line->dy * line->speed;
@@ -57,6 +76,11 @@ bool update_sweeping_line(SweepingLine *line, SweepingLine **lines, int *num_lin
     return false;
 }
 
+/**
+ *  Dibuja la línea en la ventana
+ * @param line
+ * @param renderer
+ */
 void render_sweeping_line(SweepingLine *line, SDL_Renderer *renderer) {
     SDL_SetRenderDrawColor(renderer, line->color.r, line->color.g, line->color.b, line->color.a);
     SDL_Rect rect = {line->x, line->y, line->length, line->width};

@@ -4,6 +4,17 @@
 #include <math.h>
 #include <stdlib.h>
 
+/**
+ * Constructor de Circle
+ * @param circle
+ * @param x
+ * @param y
+ * @param dx
+ * @param dy
+ * @param radius
+ * @param speed
+ * @param color
+ */
 void init_circle(Circle *circle, int x, int y, int dx, int dy, int radius, int speed, SDL_Color color) {
     circle->x = x;
     circle->y = y;
@@ -15,6 +26,15 @@ void init_circle(Circle *circle, int x, int y, int dx, int dy, int radius, int s
     circle->collision_cooldown = 0;
 }
 
+/**
+ * Revisa el estado del círculo y actualiza su posición. Si colisiona con algo, se invierte su dirección y se crea un nuevo círculo.
+ * @param circle
+ * @param lines
+ * @param num_lines
+ * @param circles
+ * @param num_circles
+ * @return
+ */
 bool update_circle(Circle *circle, SweepingLine *lines, int num_lines, Circle **circles, int *num_circles) {
     circle->x += circle->dx * circle->speed;
     circle->y += circle->dy * circle->speed;
@@ -78,6 +98,11 @@ bool update_circle(Circle *circle, SweepingLine *lines, int num_lines, Circle **
     return false;
 }
 
+/**
+ * Renderiza el círculo en el renderer
+ * @param circle
+ * @param renderer
+ */
 void render_circle(Circle *circle, SDL_Renderer *renderer) {
     SDL_SetRenderDrawColor(renderer, circle->color.r, circle->color.g, circle->color.b, circle->color.a);
     for (int w = 0; w < circle->radius * 2; w++) {
