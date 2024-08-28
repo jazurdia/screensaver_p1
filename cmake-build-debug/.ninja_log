@@ -2,3 +2,6 @@
 489	582	7465155361558709	screensaver_p1.exe	346a428d379da9d4
 19	489	7465155356856980	CMakeFiles/screensaver_p1.dir/src/main.c.obj	b0fa94b2cc76c335
 24	488	7465155356905351	CMakeFiles/screensaver_p1.dir/src/sweeping_line.c.obj	e0cff85e1ef06990
+22	630	7465218524832585	CMakeFiles/screensaver_p1.dir/src/main.c.obj	b0fa94b2cc76c335
+27	725	7465218524881189	CMakeFiles/screensaver_p1.dir/src/sweeping_line.c.obj	e0cff85e1ef06990
+725	855	7465218531860835	screensaver_p1.exe	346a428d379da9d4
