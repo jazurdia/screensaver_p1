@@ -1,6 +1,7 @@
+// sweeping_line.c
 #include "sweeping_line.h"
 #include "config.h"
-#include <math.h>
+#include <stdlib.h>
 
 void init_sweeping_line(SweepingLine *line, int x, int y, int dx, int dy, int length, int width, int speed, SDL_Color color) {
     line->x = x;
@@ -11,44 +12,47 @@ void init_sweeping_line(SweepingLine *line, int x, int y, int dx, int dy, int le
     line->width = width;
     line->speed = speed;
     line->color = color;
-    line->collision_cooldown = 0; // Inicializar cooldown a 0
+    line->collision_cooldown = 0;
 }
 
-void update_sweeping_line(SweepingLine *line, SweepingLine lines[], int num_lines) {
-    // Actualizar la posición usando la velocidad individual
+bool update_sweeping_line(SweepingLine *line, SweepingLine **lines, int *num_lines) {
     line->x += line->dx * line->speed;
     line->y += line->dy * line->speed;
 
-    // Decrementar el cooldown de colisión
     if (line->collision_cooldown > 0) {
-        line->collision_cooldown -= 16; // Aproximadamente 60 FPS
+        line->collision_cooldown -= 16;
     }
 
-    // Rebotar en los bordes de la pantalla
     if (line->x <= 0 || line->x + line->length >= SCREEN_WIDTH) line->dx = -line->dx;
     if (line->y <= 0 || line->y + line->width >= SCREEN_HEIGHT) line->dy = -line->dy;
 
-    // Rebotar con otras líneas
     if (line->collision_cooldown <= 0) {
-        for (int i = 0; i < num_lines; i++) {
-            if (&lines[i] != line) {
-                int distance_x = abs(lines[i].x - line->x);
-                int distance_y = abs(lines[i].y - line->y);
+        for (int i = 0; i < *num_lines; i++) {
+            if (&(*lines)[i] != line) {
+                int distance_x = abs((*lines)[i].x - line->x);
+                int distance_y = abs((*lines)[i].y - line->y);
 
-                // Colisión simple basada en la cercanía
                 if (distance_x < line->length && distance_y < line->width) {
-                    // Resolver colisión
                     int overlap_x = line->length - distance_x;
                     int overlap_y = line->width - distance_y;
-                    line->x -= overlap_x * (line->x - lines[i].x) / line->length;
-                    line->y -= overlap_y * (line->y - lines[i].y) / line->width;
+                    line->x -= overlap_x * (line->x - (*lines)[i].x) / line->length;
+                    line->y -= overlap_y * (line->y - (*lines)[i].y) / line->width;
                     line->dx = -line->dx;
                     line->dy = -line->dy;
-                    line->collision_cooldown = 1000; // 1 segundo de cooldown
+                    line->collision_cooldown = 1000;
+
+                    // Crear nueva línea
+                    SweepingLine new_line;
+                    init_sweeping_line(&new_line, rand() % SCREEN_WIDTH, rand() % SCREEN_HEIGHT, (rand() % 2 == 0) ? 1 : -1, (rand() % 2 == 0) ? 1 : -1, 20 + rand() % 100, 5 + rand() % 5, 1 + rand() % 5, (SDL_Color){rand() % 256, rand() % 256, rand() % 256, 255});
+                    *lines = realloc(*lines, (*num_lines + 1) * sizeof(SweepingLine));
+                    (*lines)[*num_lines] = new_line;
+                    (*num_lines)++;
+                    return true;
                 }
             }
         }
     }
+    return false;
 }
 
 void render_sweeping_line(SweepingLine *line, SDL_Renderer *renderer) {

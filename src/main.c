@@ -1,11 +1,13 @@
+// main.c
 #include <SDL.h>
 #include <stdbool.h>
-#include "config.h"
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
-
+#include "config.h"
 #include "circle.h"
+#include "sweeping_line.h"
 #include "mystify_line.h"
 
 int main(int argc, char* argv[]) {
@@ -19,51 +21,25 @@ int main(int argc, char* argv[]) {
                                           SDL_WINDOW_SHOWN);
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
-    SweepingLine lines[NUM_LINES];
-    Circle circles[NUM_CIRCLES];
-
-    // Inicializar líneas con posiciones, direcciones, y velocidades aleatorias
-    for (int i = 0; i < NUM_LINES; ++i) {
-        int x = rand() % SCREEN_WIDTH;
-        int y = rand() % SCREEN_HEIGHT;
-        int dx = (rand() % 2 == 0) ? 1 : -1;
-        int dy = (rand() % 2 == 0) ? 1 : -1;
-
-        int length = 20 + rand() % 100; // Longitud aleatoria entre 10 y 110
-        int width = 5 + rand() % 5; // Ancho aleatorio entre 1 y 5
-
-        int speed = 1 + rand() % 5; // Velocidad aleatoria entre 1 y 5
-        SDL_Color color = {rand() % 256, rand() % 256, rand() % 256, 255};
-        init_sweeping_line(&lines[i], x, y, dx, dy, length, width, speed, color);
+    int num_lines = NUM_LINES;
+    SweepingLine *lines = malloc(num_lines * sizeof(SweepingLine));
+    for (int i = 0; i < num_lines; ++i) {
+        init_sweeping_line(&lines[i], rand() % SCREEN_WIDTH, rand() % SCREEN_HEIGHT, (rand() % 2 == 0) ? 1 : -1, (rand() % 2 == 0) ? 1 : -1, 20 + rand() % 100, 5 + rand() % 5, 1 + rand() % 5, (SDL_Color){rand() % 256, rand() % 256, rand() % 256, 255});
     }
 
-    // Inicializar círculos con posiciones, direcciones, y velocidades aleatorias
-    for (int i = 0; i < NUM_CIRCLES; ++i) {
-        int x = rand() % SCREEN_WIDTH;
-        int y = rand() % SCREEN_HEIGHT;
-        int dx = (rand() % 2 == 0) ? 1 : -1;
-        int dy = (rand() % 2 == 0) ? 1 : -1;
-
-        int radius = 20 + rand() % 30; // Radio aleatorio entre 10 y 40
-        int speed = 5 + rand() % 5; // Velocidad aleatoria entre 1 y 5
-
-        SDL_Color color = {rand() % 256, rand() % 256, rand() % 256, 255};
-        init_circle(&circles[i], x, y, dx, dy, radius, speed, color);
+    int num_circles = NUM_CIRCLES;
+    Circle *circles = malloc(num_circles * sizeof(Circle));
+    for (int i = 0; i < num_circles; ++i) {
+        init_circle(&circles[i], rand() % SCREEN_WIDTH, rand() % SCREEN_HEIGHT, (rand() % 2 == 0) ? 1 : -1, (rand() % 2 == 0) ? 1 : -1, 20 + rand() % 30, 5 + rand() % 5, (SDL_Color){rand() % 256, rand() % 256, rand() % 256, 255});
     }
 
-    MystifyLine mystify_lines[NUM_MYSTIFY_LINES];
-
-    // Iniciar lineas mystify_line
-    for (int i = 0; i < NUM_MYSTIFY_LINES; i++) {
-        int speed = 1 + rand() % 5; // Velocidad aleatoria entre 1 y 5
-        SDL_Color color = {rand() % 256, rand() % 256, rand() % 256, 255};
-        init_mystify_line(&mystify_lines[i], speed, color);
+    int num_mystify_lines = NUM_MYSTIFY_LINES;
+    MystifyLine *mystify_lines = malloc(num_mystify_lines * sizeof(MystifyLine));
+    for (int i = 0; i < num_mystify_lines; i++) {
+        init_mystify_line(&mystify_lines[i], 1 + rand() % 5, (SDL_Color){rand() % 256, rand() % 256, rand() % 256, 255});
     }
-
 
     uint32_t frameStart, frameTime;
-    char title[] = "FPS: ";
-
     bool running = true;
     while (running) {
         frameStart = SDL_GetTicks();
@@ -79,17 +55,21 @@ int main(int argc, char* argv[]) {
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
-        for (int i = 0; i < NUM_LINES; ++i) {
-            update_sweeping_line(&lines[i], lines, NUM_LINES);
+        for (int i = 0; i < num_lines; ++i) {
+            if (update_sweeping_line(&lines[i], &lines, &num_lines)) {
+                i--; // Re-evaluate the current index after adding a new line
+            }
             render_sweeping_line(&lines[i], renderer);
         }
 
-        for (int i = 0; i < NUM_CIRCLES; ++i) {
-            update_circle(&circles[i], lines, NUM_LINES, circles, NUM_CIRCLES);
+        for (int i = 0; i < num_circles; ++i) {
+            if (update_circle(&circles[i], lines, num_lines, &circles, &num_circles)) {
+                i--; // Re-evaluate the current index after adding a new circle
+            }
             render_circle(&circles[i], renderer);
         }
 
-        for (int i = 0; i < NUM_MYSTIFY_LINES; i++) {
+        for (int i = 0; i < num_mystify_lines; i++) {
             update_mystify_line(&mystify_lines[i]);
             render_mystify_line(&mystify_lines[i], renderer);
         }
@@ -103,9 +83,12 @@ int main(int argc, char* argv[]) {
         }
 
         SDL_RenderPresent(renderer);
-        SDL_Delay(16); // Aproximadamente 60 FPS
+        SDL_Delay(16);
     }
 
+    free(lines);
+    free(circles);
+    free(mystify_lines);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
