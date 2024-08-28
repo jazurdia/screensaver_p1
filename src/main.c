@@ -6,6 +6,7 @@
 #include <time.h>
 
 #include "circle.h"
+#include "mystify_line.h"
 
 int main(int argc, char* argv[]) {
     SDL_Init(SDL_INIT_VIDEO);
@@ -28,8 +29,8 @@ int main(int argc, char* argv[]) {
         int dx = (rand() % 2 == 0) ? 1 : -1;
         int dy = (rand() % 2 == 0) ? 1 : -1;
 
-        int length = 10 + rand() % 100; // Longitud aleatoria entre 10 y 110
-        int width = 1 + rand() % 5; // Ancho aleatorio entre 1 y 5
+        int length = 20 + rand() % 100; // Longitud aleatoria entre 10 y 110
+        int width = 5 + rand() % 5; // Ancho aleatorio entre 1 y 5
 
         int speed = 1 + rand() % 5; // Velocidad aleatoria entre 1 y 5
         SDL_Color color = {rand() % 256, rand() % 256, rand() % 256, 255};
@@ -42,12 +43,22 @@ int main(int argc, char* argv[]) {
         int y = rand() % SCREEN_HEIGHT;
         int dx = (rand() % 2 == 0) ? 1 : -1;
         int dy = (rand() % 2 == 0) ? 1 : -1;
-        int radius = 10 + rand() % 30; // Radio aleatorio entre 10 y 40
-        int speed = 1 + rand() % 5; // Velocidad aleatoria entre 1 y 5
+
+        int radius = 20 + rand() % 30; // Radio aleatorio entre 10 y 40
+        int speed = 5 + rand() % 5; // Velocidad aleatoria entre 1 y 5
+
         SDL_Color color = {rand() % 256, rand() % 256, rand() % 256, 255};
         init_circle(&circles[i], x, y, dx, dy, radius, speed, color);
     }
 
+    MystifyLine mystify_lines[NUM_MYSTIFY_LINES];
+
+    // Iniciar lineas mystify_line
+    for (int i = 0; i < NUM_MYSTIFY_LINES; i++) {
+        int speed = 1 + rand() % 5; // Velocidad aleatoria entre 1 y 5
+        SDL_Color color = {rand() % 256, rand() % 256, rand() % 256, 255};
+        init_mystify_line(&mystify_lines[i], speed, color);
+    }
 
 
     uint32_t frameStart, frameTime;
@@ -76,6 +87,11 @@ int main(int argc, char* argv[]) {
         for (int i = 0; i < NUM_CIRCLES; ++i) {
             update_circle(&circles[i], lines, NUM_LINES, circles, NUM_CIRCLES);
             render_circle(&circles[i], renderer);
+        }
+
+        for (int i = 0; i < NUM_MYSTIFY_LINES; i++) {
+            update_mystify_line(&mystify_lines[i]);
+            render_mystify_line(&mystify_lines[i], renderer);
         }
 
         frameTime = SDL_GetTicks() - frameStart;

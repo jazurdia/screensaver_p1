@@ -14,7 +14,9 @@ add_executable(screensaver_p1 src/main.c
         src/sweeping_line.h
         src/sweeping_line.c
         src/circle.h
-        src/circle.c)
+        src/circle.c
+        src/mystify_line.h
+        src/mystify_line.c)
 
 
 target_link_libraries(screensaver_p1 ${SDL2_LIBRARY})

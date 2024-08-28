@@ -70,6 +70,13 @@ build CMakeFiles/screensaver_p1.dir/src/circle.c.obj: C_COMPILER__screensaver_p1
   OBJECT_DIR = CMakeFiles\screensaver_p1.dir
   OBJECT_FILE_DIR = CMakeFiles\screensaver_p1.dir\src
 
+build CMakeFiles/screensaver_p1.dir/src/mystify_line.c.obj: C_COMPILER__screensaver_p1_unscanned_Debug C$:/coding/CP/screensaver-p1/src/mystify_line.c || cmake_object_order_depends_target_screensaver_p1
+  DEP_FILE = CMakeFiles\screensaver_p1.dir\src\mystify_line.c.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -IC:/coding/CP/SDL2-devel-2.30.6-mingw/SDL2-2.30.6/x86_64-w64-mingw32/include/SDL2
+  OBJECT_DIR = CMakeFiles\screensaver_p1.dir
+  OBJECT_FILE_DIR = CMakeFiles\screensaver_p1.dir\src
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target screensaver_p1
@@ -78,7 +85,7 @@ build CMakeFiles/screensaver_p1.dir/src/circle.c.obj: C_COMPILER__screensaver_p1
 #############################################
 # Link the executable screensaver_p1.exe
 
-build screensaver_p1.exe: C_EXECUTABLE_LINKER__screensaver_p1_Debug CMakeFiles/screensaver_p1.dir/src/main.c.obj CMakeFiles/screensaver_p1.dir/src/sweeping_line.c.obj CMakeFiles/screensaver_p1.dir/src/circle.c.obj | C$:/coding/CP/SDL2-devel-2.30.6-mingw/SDL2-2.30.6/x86_64-w64-mingw32/lib/libSDL2main.a C$:/coding/CP/SDL2-devel-2.30.6-mingw/SDL2-2.30.6/x86_64-w64-mingw32/lib/libSDL2.dll.a
+build screensaver_p1.exe: C_EXECUTABLE_LINKER__screensaver_p1_Debug CMakeFiles/screensaver_p1.dir/src/main.c.obj CMakeFiles/screensaver_p1.dir/src/sweeping_line.c.obj CMakeFiles/screensaver_p1.dir/src/circle.c.obj CMakeFiles/screensaver_p1.dir/src/mystify_line.c.obj | C$:/coding/CP/SDL2-devel-2.30.6-mingw/SDL2-2.30.6/x86_64-w64-mingw32/lib/libSDL2main.a C$:/coding/CP/SDL2-devel-2.30.6-mingw/SDL2-2.30.6/x86_64-w64-mingw32/lib/libSDL2.dll.a
   FLAGS = -g
   LINK_LIBRARIES = -lmingw32  -mwindows  C:/coding/CP/SDL2-devel-2.30.6-mingw/SDL2-2.30.6/x86_64-w64-mingw32/lib/libSDL2main.a  C:/coding/CP/SDL2-devel-2.30.6-mingw/SDL2-2.30.6/x86_64-w64-mingw32/lib/libSDL2.dll.a  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\screensaver_p1.dir
