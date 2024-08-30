@@ -19,10 +19,11 @@ sidebar_position: 1
 
 *Proyecto 1 de Computación Paralela*
 
+Este documento presenta el Proyecto 1 de Computación Paralela, desarrollado por los estudiantes Javier Alejandro Azurdia Arrecis, Angel Sebastian Castellanos Pineda, y Diego Alejandro Morales Escobar en la Universidad del Valle de Guatemala en agosto de 2024. El proyecto consiste en la implementación de un screensaver utilizando técnicas de programación paralela con OpenMP y la biblioteca SDL para la renderización gráfica.
 
-Este proyecto implementa una simulación básica de un ecosistema en C. La simulación modela un ecosistema en una cuadrícula donde coexisten plantas, herbívoros y carnívoros. Las plantas pueden nacer, reproducirse y morir. Los herbívoros y carnívoros pueden hacer lo mismo, además de comer y moverse. Los herbívoros comen plantas y los carnívoros comen herbívoros. Los herbívoros y carnívoros pueden morir de hambre si no comen lo suficiente.
+El screensaver incluye tres componentes principales: líneas móviles, círculos y cuadrados/rectángulos. Las líneas se mueven suavemente por la pantalla formando patrones geométricos, los círculos interactúan entre sí y con las líneas, y los cuadrados/rectángulos también interactúan con los otros elementos. El programa permite configurar el número inicial de líneas y círculos, y muestra el rendimiento en términos de FPS (cuadros por segundo) durante la ejecución.
 
-El proyecto fue desarrollado como parte del curso de Computación Paralela en la Universidad del Valle de Guatemala en Agosto de 2024
+El proyecto se ha desarrollado en lenguaje C, utilizando la biblioteca SDL para la renderización gráfica y OpenMP para la paralelización de tareas. Se han implementado versiones secuenciales y paralelas del screensaver, con el objetivo de comparar su rendimiento y comportamiento bajo diferentes condiciones de carga. Se han realizado pruebas para evaluar el rendimiento de ambas versiones y se han analizado los resultados obtenidos.
 
 ## Antecedentes
 
@@ -173,6 +174,9 @@ En la esquina superior izqierda se puede observar un contador con las entidades 
 
 ## Conclusiones
 
+La Versión secuencial del screen saver muestra una mayor estabilidad y predictibilidad bajo condiciones de alta carga, con una disminución gradual en los FPS a medida que se incrementa el número de elementos. Tanto las líneas como los círculos tienden a alcanzar el límite máximo de 200 elementos después de 30 segundos, lo que indica una saturación predecible y consistente. Esta versión es más adecuada para situaciones en las que se espera una carga constante y alta, manteniendo un rendimiento más estable.
+
+Por otro lado, la Versión paralela es más eficiente en condiciones de baja carga, manteniendo altos FPS cuando hay pocos elementos iniciales. Sin embargo, sufre caídas más abruptas en los FPS cuando aumenta el número de elementos, y su comportamiento es menos predecible, especialmente en lo que respecta a la cantidad de círculos dibujados. Esta versión podría ser más adecuada para escenarios donde se prioriza el rendimiento con baja carga, pero es menos estable bajo alta carga en comparación con la versión secuencial.
 
 ## Recomendaciones
 - Se recomienda el uso del IDE CLION de JetBrains debido a que el mismo realiza las configuraciones necesarias para la ejecución de programas en C. 
@@ -183,6 +187,11 @@ En la esquina superior izqierda se puede observar un contador con las entidades 
 - Ritchie, D. M. (2003). The development of the C language. Bell Labs. Recuperado 29 de agosto de 2024, de https://www.bell-labs.com/usr/dmr/www/chist.html
 - University of Notre Dame. (s. f.). Lecture 12: Introduction to OpenMP (Part 1). Recuperado 29 de agosto de 2024, de https://www3.nd.edu/~zxu2/acms60212-40212/Lec-12-OpenMP.pdf
 - SDL. (2023). Simple DirectMedia Layer - Homepage. Recuperado 29 de agosto de 2024, de https://www.libsdl.org/
+
+## Anexo 1 - Diagrama de flujo del programa
+<div style={{ textAlign: 'center' }}>
+  <img src="/img/Diagrama ScreenSaver.png" alt="Diagrama del programa" style={{ width: '150%', height: 'auto' }} />
+</div>
 
 ## Anexo 2 - Catálogo de funciones
 
@@ -269,3 +278,73 @@ En la esquina superior izqierda se puede observar un contador con las entidades 
   - (int): Retorna un valor entero que indica el estado de finalización del programa (`0` para éxito).
 - Descripción
   - Punto de entrada principal del programa. Inicializa los recursos necesarios, gestiona el bucle principal de la aplicación, y maneja la ejecución y finalización del programa basándose en los argumentos de entrada.
+
+
+## Anexo 3 - Bitácora de Pruebas
+
+A continuación se muestran los resultados de las pruebas que se realizaron, tanto con la versión secuencial como con la paralela. 
+
+### Secuencial
+
+| Líneas Iniciales | Círculos Iniciales | Líneas después de 30 segundos | Círculos después de 30 segundos | FPS después de 30 segundos |
+|-----------------|--------------------|------------------------------|-------------------------------|----------------------------|
+| 2               | 2                  | 6                            | 50                            | 250                        |
+| 4               | 4                  | 92                           | 50                            | 333                        |
+| 6               | 6                  | 20                           | 100                           | 142                        |
+| 8               | 8                  | 71                           | 200                           | 71                         |
+| 10              | 10                 | 29                           | 200                           | 30                         |
+| 12              | 12                 | 65                           | 200                           | 30                         |
+| 14              | 14                 | 109                          | 200                           | 28                         |
+| 16              | 16                 | 106                          | 200                           | 38                         |
+| 18              | 18                 | 48                           | 200                           | 38                         |
+| 20              | 20                 | 82                           | 200                           | 27                         |
+
+<div style={{ textAlign: 'center' }}>
+  <img src="/img/g1_secuencial.jpg" alt="Gráfica 1" style={{ width: '75%', height: 'auto' }} />
+</div>
+
+
+Muestra el número de líneas y círculos después de 30 segundos en función del número inicial de líneas y círculos. Podemos observar que el número de círculos rápidamente alcanza el límite de 200, independientemente del número inicial, mientras que las líneas muestran un comportamiento más variable.
+
+<div style={{ textAlign: 'center' }}>
+  <img src="/img/g2_secuencial.jpg" alt="Gráfica 2" style={{ width: '75%', height: 'auto' }} />
+</div>
+
+
+Representa los FPS después de 30 segundos en función del número inicial de líneas y círculos. A medida que aumentan los elementos iniciales, los FPS disminuyen significativamente, lo que indica una sobrecarga en el sistema, especialmente cuando se aproxima al máximo permitido de elementos.
+
+
+### Paralela
+| Líneas Iniciales | Círculos Iniciales | Líneas después de 30 segundos | Círculos después de 30 segundos | FPS después de 30 segundos |
+|-----------------|--------------------|------------------------------|-------------------------------|----------------------------|
+| 2               | 2                  | 3                            | 3                             | 1000                       |
+| 4               | 4                  | 74                           | 4                             | 1000                       |
+| 6               | 6                  | 19                           | 120                           | 62                         |
+| 8               | 8                  | 200                          | 62                            | 200                        |
+| 10              | 10                 | 200                          | 29                            | 500                        |
+| 12              | 12                 | 200                          | 65                            | 250                        |
+| 14              | 14                 | 200                          | 42                            | 333                        |
+| 16              | 16                 | 200                          | 48                            | 333                        |
+| 18              | 18                 | 200                          | 35                            | 333                        |
+| 20              | 20                 | 200                          | 31                            | 500                        |
+
+
+<div style={{ textAlign: 'center' }}>
+  <img src="/img/g1_paralela.jpg" alt="Gráfica 3" style={{ width: '75%', height: 'auto' }} />
+</div>
+
+
+Muestra el número de líneas y círculos después de 30 segundos en función del número inicial de líneas y círculos. Se observa que las líneas alcanzan rápidamente el límite máximo de 200, mientras que los círculos muestran más variabilidad y no siempre llegan al límite.
+
+<div style={{ textAlign: 'center' }}>
+  <img src="/img/g2_paralela.jpg" alt="Gráfica 4" style={{ width: '75%', height: 'auto' }} />
+</div>
+
+
+Representa los FPS después de 30 segundos en función del número inicial de líneas y círculos. Los FPS se mantienen altos (1000) con pocos elementos iniciales, pero disminuyen drásticamente a medida que se incrementa el número de elementos y se acerca al límite máximo permitido.
+
+<div style={{ textAlign: 'center' }}>
+  <img src="/img/secuencialvsparalela.jpg" alt="Comparación de FPS Secuencial vs Paralela" style={{ width: '75%', height: 'auto' }} />
+</div>
+
+Representa la comparación entre el rendimiento en fps de la versión secuencial y paralela del proyecto. Se observa una clara tendencia en favor de la versión paralela, teniendo signficativamente más fps en todas las pruebas. 

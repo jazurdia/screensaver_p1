@@ -80,7 +80,7 @@ const config = {
             type: "docSidebar",
             sidebarId: "tutorialSidebar",
             position: "left",
-            label: "Tutorial",
+            label: "Proyecto 1",
           },
           {
             href: "https://github.com/jazurdia/screensaver_p1.git",
