@@ -62,7 +62,7 @@ bool update_circle(Circle *circle, SweepingLine *lines, int num_lines, Circle **
     }
 
     if (circle->collision_cooldown <= 0) {
-    #pragma omp parallel for
+    
         for (int i = 0; i < num_lines; i++) {
             int distance_x = abs(lines[i].x - circle->x);
             int distance_y = abs(lines[i].y - circle->y);
@@ -82,12 +82,12 @@ bool update_circle(Circle *circle, SweepingLine *lines, int num_lines, Circle **
                     if (*num_circles < MAX_CIRCLES) {
                         Circle new_circle;
                         init_circle(&new_circle, rand() % SCREEN_WIDTH, rand() % SCREEN_HEIGHT, (rand() % 2 == 0) ? 1 : -1, (rand() % 2 == 0) ? 1 : -1, 20 + rand() % 30, 5 + rand() % 5, (SDL_Color){rand() % 256, rand() % 256, rand() % 256, 255});
-                        #pragma omp critical
-                        {
+
+
                             *circles = realloc(*circles, (*num_circles + 1) * sizeof(Circle));
                             (*circles)[*num_circles] = new_circle;
                             (*num_circles)++;
-                        }
+
                     }
                     return true;
                 }
@@ -96,7 +96,7 @@ bool update_circle(Circle *circle, SweepingLine *lines, int num_lines, Circle **
     }
 
     if (circle->collision_cooldown <= 0) {
-    #pragma omp parallel for
+    
         for (int i = 0; i < *num_circles; i++) {
             if (&(*circles)[i] != circle) {
                 int distance = sqrt(pow((*circles)[i].x - circle->x, 2) + pow((*circles)[i].y - circle->y, 2));
@@ -118,12 +118,11 @@ bool update_circle(Circle *circle, SweepingLine *lines, int num_lines, Circle **
                             Circle new_circle;
                             init_circle(&new_circle, rand() % SCREEN_WIDTH, rand() % SCREEN_HEIGHT, (rand() % 2 == 0) ? 1 : -1, (rand() % 2 == 0) ? 1 : -1, 20 + rand() % 30, 5 + rand() % 5, (SDL_Color){rand() % 256, rand() % 256, rand() % 256, 255});
 
-                            #pragma omp critical
-                            {
+
                                 *circles = realloc(*circles, (*num_circles + 1) * sizeof(Circle));
                                 (*circles)[*num_circles] = new_circle;
                                 (*num_circles)++;
-                            }
+
                         }
                         return true;
                     }

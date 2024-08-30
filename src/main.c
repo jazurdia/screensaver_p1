@@ -33,20 +33,20 @@ int main(int argc, char* argv[]) {
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     SweepingLine *lines = malloc(num_lines * sizeof(SweepingLine));
-#pragma omp parallel for
+
     for (int i = 0; i < num_lines; ++i) {
         init_sweeping_line(&lines[i], rand() % SCREEN_WIDTH, rand() % SCREEN_HEIGHT, (rand() % 2 == 0) ? 1 : -1, (rand() % 2 == 0) ? 1 : -1, 20 + rand() % 100, 20 + rand() % 100, 1 + rand() % 5, (SDL_Color){rand() % 256, rand() % 256, rand() % 256, 255});
     }
 
     Circle *circles = malloc(num_circles * sizeof(Circle));
-#pragma omp parallel for
+
     for (int i = 0; i < num_circles; ++i) {
         init_circle(&circles[i], rand() % SCREEN_WIDTH, rand() % SCREEN_HEIGHT, (rand() % 2 == 0) ? 1 : -1, (rand() % 2 == 0) ? 1 : -1, 20 + rand() % 30, 3 + rand() % 5, (SDL_Color){rand() % 256, rand() % 256, rand() % 256, 255});
     }
 
     int num_mystify_lines = NUM_MYSTIFY_LINES;
     MystifyLine *mystify_lines = malloc(num_mystify_lines * sizeof(MystifyLine));
-#pragma omp parallel for
+
     for (int i = 0; i < num_mystify_lines; i++) {
         init_mystify_line(&mystify_lines[i], 1 + rand() % 5, (SDL_Color){rand() % 256, rand() % 256, rand() % 256, 255});
     }
@@ -67,13 +67,13 @@ int main(int argc, char* argv[]) {
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
-#pragma omp parallel for
+
         for (int i = 0; i < num_mystify_lines; i++) {
             update_mystify_line(&mystify_lines[i]);
             render_mystify_line(&mystify_lines[i], renderer);
         }
 
-#pragma omp parallel for
+
         for (int i = 0; i < num_lines; ++i) {
             if (update_sweeping_line(&lines[i], &lines, &num_lines)) {
                 i--; // Re-evaluate the current index after adding a new line
@@ -81,7 +81,7 @@ int main(int argc, char* argv[]) {
             render_sweeping_line(&lines[i], renderer);
         }
 
-#pragma omp parallel for
+
         for (int i = 0; i < num_circles; ++i) {
             if (update_circle(&circles[i], lines, num_lines, &circles, &num_circles)) {
                 // si hay menos de 2 circulos, no se debe eliminar ninguno.
