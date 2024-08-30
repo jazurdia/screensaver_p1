@@ -28,13 +28,13 @@ void init_circle(Circle *circle, int x, int y, int dx, int dy, int radius, int s
 }
 
 /**
- * Revisa el estado del círculo y actualiza su posición. Si colisiona con algo, se invierte su dirección y se crea un nuevo círculo.
+ * Revisa el estado del círculo y actualiza su posición. Si colisiona con algo, se invierte su dirección, se crea un nuevo círculo, o se destruye.
  * @param circle
  * @param lines
  * @param num_lines
  * @param circles
  * @param num_circles
- * @return
+ * @return true si el círculo debe ser eliminado, false de lo contrario
  */
 bool update_circle(Circle *circle, SweepingLine *lines, int num_lines, Circle **circles, int *num_circles) {
     circle->x += circle->dx * circle->speed;
@@ -44,11 +44,25 @@ bool update_circle(Circle *circle, SweepingLine *lines, int num_lines, Circle **
         circle->collision_cooldown -= 16;
     }
 
-    if (circle->x - circle->radius <= 0 || circle->x + circle->radius >= SCREEN_WIDTH) circle->dx = -circle->dx;
-    if (circle->y - circle->radius <= 0 || circle->y + circle->radius >= SCREEN_HEIGHT) circle->dy = -circle->dy;
+    // Verificación y corrección de colisiones con los bordes de la pantalla
+    if (circle->x - circle->radius <= 0) {
+        circle->dx = -circle->dx;
+        circle->x = circle->radius;  // Reposiciona ligeramente dentro del borde
+    } else if (circle->x + circle->radius >= SCREEN_WIDTH) {
+        circle->dx = -circle->dx;
+        circle->x = SCREEN_WIDTH - circle->radius;  // Reposiciona ligeramente dentro del borde
+    }
+
+    if (circle->y - circle->radius <= 0) {
+        circle->dy = -circle->dy;
+        circle->y = circle->radius;  // Reposiciona ligeramente dentro del borde
+    } else if (circle->y + circle->radius >= SCREEN_HEIGHT) {
+        circle->dy = -circle->dy;
+        circle->y = SCREEN_HEIGHT - circle->radius;  // Reposiciona ligeramente dentro del borde
+    }
 
     if (circle->collision_cooldown <= 0) {
-#pragma omp parallel for
+    #pragma omp parallel for
         for (int i = 0; i < num_lines; i++) {
             int distance_x = abs(lines[i].x - circle->x);
             int distance_y = abs(lines[i].y - circle->y);
@@ -58,8 +72,13 @@ bool update_circle(Circle *circle, SweepingLine *lines, int num_lines, Circle **
                 circle->dy = -circle->dy;
                 circle->collision_cooldown = 1000;
 
+                // Probabilidad de destrucción al colisionar con una sweeping line
+                //if (*num_circles > 2 && rand() % 100 < PROB_DESTRUCTION) {
+                if(*num_circles > 2) {
+                    return true;  // Señalar que el círculo debe ser destruido
+                }
+
                 if(rand() % 100 < PROB_REPR){
-                    // Crear nuevo círculo si no se ha alcanzado el límite
                     if (*num_circles < MAX_CIRCLES) {
                         Circle new_circle;
                         init_circle(&new_circle, rand() % SCREEN_WIDTH, rand() % SCREEN_HEIGHT, (rand() % 2 == 0) ? 1 : -1, (rand() % 2 == 0) ? 1 : -1, 20 + rand() % 30, 5 + rand() % 5, (SDL_Color){rand() % 256, rand() % 256, rand() % 256, 255});
@@ -90,6 +109,10 @@ bool update_circle(Circle *circle, SweepingLine *lines, int num_lines, Circle **
                     circle->dy = -circle->dy;
                     circle->collision_cooldown = 1000;
 
+                    if (*num_circles > 2 && rand() % 100 < PROB_DESTRUCTION) {
+                        return true;  // Señalar que el círculo debe ser destruido
+                    }
+
                     if (rand() % 100 < PROB_REPR){
                         if (*num_circles < MAX_CIRCLES) {
                             Circle new_circle;
@@ -110,6 +133,8 @@ bool update_circle(Circle *circle, SweepingLine *lines, int num_lines, Circle **
     }
     return false;
 }
+
+
 
 /**
  * Renderiza el círculo en el renderer

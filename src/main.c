@@ -59,6 +59,13 @@ int main(int argc, char* argv[]) {
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
+
+#pragma omp parallel for
+        for (int i = 0; i < num_mystify_lines; i++) {
+            update_mystify_line(&mystify_lines[i]);
+            render_mystify_line(&mystify_lines[i], renderer);
+        }
+
 #pragma omp parallel for
         for (int i = 0; i < num_lines; ++i) {
             if (update_sweeping_line(&lines[i], &lines, &num_lines)) {
@@ -70,16 +77,12 @@ int main(int argc, char* argv[]) {
 #pragma omp parallel for
         for (int i = 0; i < num_circles; ++i) {
             if (update_circle(&circles[i], lines, num_lines, &circles, &num_circles)) {
+                // si hay menos de 2 circulos, no se debe eliminar ninguno.
                 i--; // Re-evaluate the current index after adding a new circle
             }
             render_circle(&circles[i], renderer);
         }
 
-#pragma omp parallel for
-        for (int i = 0; i < num_mystify_lines; i++) {
-            update_mystify_line(&mystify_lines[i]);
-            render_mystify_line(&mystify_lines[i], renderer);
-        }
 
         frameTime = SDL_GetTicks() - frameStart;
 

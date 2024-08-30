@@ -43,11 +43,25 @@ bool update_sweeping_line(SweepingLine *line, SweepingLine **lines, int *num_lin
         line->collision_cooldown -= 16;
     }
 
-    if (line->x <= 0 || line->x + line->length >= SCREEN_WIDTH) line->dx = -line->dx;
-    if (line->y <= 0 || line->y + line->width >= SCREEN_HEIGHT) line->dy = -line->dy;
+    // Verificación y corrección de colisiones con los bordes de la pantalla
+    if (line->x <= 0) {
+        line->dx = -line->dx;
+        line->x = 0;  // Reposiciona ligeramente dentro del borde
+    } else if (line->x + line->length >= SCREEN_WIDTH) {
+        line->dx = -line->dx;
+        line->x = SCREEN_WIDTH - line->length;  // Reposiciona ligeramente dentro del borde
+    }
+
+    if (line->y <= 0) {
+        line->dy = -line->dy;
+        line->y = 0;  // Reposiciona ligeramente dentro del borde
+    } else if (line->y + line->width >= SCREEN_HEIGHT) {
+        line->dy = -line->dy;
+        line->y = SCREEN_HEIGHT - line->width;  // Reposiciona ligeramente dentro del borde
+    }
 
     if (line->collision_cooldown <= 0) {
-#pragma omp parallel for
+    #pragma omp parallel for
         for (int i = 0; i < *num_lines; i++) {
             if (&(*lines)[i] != line) {
                 int distance_x = abs((*lines)[i].x - line->x);
@@ -62,15 +76,13 @@ bool update_sweeping_line(SweepingLine *line, SweepingLine **lines, int *num_lin
                     line->dy = -line->dy;
                     line->collision_cooldown = 1000;
 
-                    // probabilidad del 30%
+                    // Probabilidad de crear una nueva línea
                     if (rand() % 100 < PROB_REPR) {
-                        // Crear nueva línea si no se ha alcanzado el límite
                         if (*num_lines < MAX_LINES) {
                             SweepingLine new_line;
                             init_sweeping_line(&new_line, rand() % SCREEN_WIDTH, rand() % SCREEN_HEIGHT, (rand() % 2 == 0) ? 1 : -1, (rand() % 2 == 0) ? 1 : -1, 20 + rand() % 100, 20 + rand() % 100, 1 + rand() % 5, (SDL_Color){rand() % 256, rand() % 256, rand() % 256, 255});
                             #pragma omp critical
                             {
-                                // Añadir nueva línea
                                 *lines = realloc(*lines, (*num_lines + 1) * sizeof(SweepingLine));
                                 (*lines)[*num_lines] = new_line;
                                 (*num_lines)++;
@@ -84,6 +96,7 @@ bool update_sweeping_line(SweepingLine *line, SweepingLine **lines, int *num_lin
     }
     return false;
 }
+
 
 /**
  *  Dibuja la línea en la ventana
