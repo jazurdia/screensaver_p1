@@ -118,7 +118,6 @@ bool update_circle(Circle *circle, SweepingLine *lines, int num_lines, Circle **
  */
 void render_circle(Circle *circle, SDL_Renderer *renderer) {
     SDL_SetRenderDrawColor(renderer, circle->color.r, circle->color.g, circle->color.b, circle->color.a);
-#pragma omp parallel for // no se si esto esta bien
     for (int w = 0; w < circle->radius * 2; w++) {
         for (int h = 0; h < circle->radius * 2; h++) {
             int dx = circle->radius - w;

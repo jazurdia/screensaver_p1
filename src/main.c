@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
     Circle *circles = malloc(num_circles * sizeof(Circle));
 #pragma omp parallel for
     for (int i = 0; i < num_circles; ++i) {
-        init_circle(&circles[i], rand() % SCREEN_WIDTH, rand() % SCREEN_HEIGHT, (rand() % 2 == 0) ? 1 : -1, (rand() % 2 == 0) ? 1 : -1, 20 + rand() % 30, 5 + rand() % 5, (SDL_Color){rand() % 256, rand() % 256, rand() % 256, 255});
+        init_circle(&circles[i], rand() % SCREEN_WIDTH, rand() % SCREEN_HEIGHT, (rand() % 2 == 0) ? 1 : -1, (rand() % 2 == 0) ? 1 : -1, 20 + rand() % 30, 3 + rand() % 5, (SDL_Color){rand() % 256, rand() % 256, rand() % 256, 255});
     }
 
     int num_mystify_lines = NUM_MYSTIFY_LINES;

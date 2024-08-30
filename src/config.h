@@ -10,6 +10,6 @@
 #define MAX_LINES 200 // Límite máximo de sweeping lines
 #define MAX_CIRCLES 50 // Límite máximo de círculos
 
-#define PROB_REPR 30 // Probabilidad de reproducción
+#define PROB_REPR 20 // Probabilidad de reproducción
 
 #endif // CONFIG_H
