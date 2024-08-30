@@ -24,5 +24,13 @@ Also, the file SDL2.dll is already included into cmake-build-debug folder, so yo
 set(SDL2_PATH "C:/coding/CP/SDL2-devel-2.30.6-mingw/SDL2-2.30.6/x86_64-w64-mingw32")
 ```
 
+
 ---
+
+Para correr esto, compilar el tonoto este con clion y despues en la carpeta cmake-build-debug correr el ejecutable que se genere.
+
+```bash
+screensaver_p1.exe 20 20
+```
+
 

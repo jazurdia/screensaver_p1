@@ -12,6 +12,16 @@
 #include <omp.h>
 
 int main(int argc, char* argv[]) {
+    int num_lines = NUM_LINES;
+    int num_circles = NUM_CIRCLES;
+
+    if (argc > 1) {
+        num_lines = atoi(argv[1]);
+    }
+    if (argc > 2) {
+        num_circles = atoi(argv[2]);
+    }
+
     SDL_Init(SDL_INIT_VIDEO);
     clock_t start_time = clock();
 
@@ -22,14 +32,12 @@ int main(int argc, char* argv[]) {
                                           SDL_WINDOW_SHOWN);
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
-    int num_lines = NUM_LINES;
     SweepingLine *lines = malloc(num_lines * sizeof(SweepingLine));
 #pragma omp parallel for
     for (int i = 0; i < num_lines; ++i) {
         init_sweeping_line(&lines[i], rand() % SCREEN_WIDTH, rand() % SCREEN_HEIGHT, (rand() % 2 == 0) ? 1 : -1, (rand() % 2 == 0) ? 1 : -1, 20 + rand() % 100, 20 + rand() % 100, 1 + rand() % 5, (SDL_Color){rand() % 256, rand() % 256, rand() % 256, 255});
     }
 
-    int num_circles = NUM_CIRCLES;
     Circle *circles = malloc(num_circles * sizeof(Circle));
 #pragma omp parallel for
     for (int i = 0; i < num_circles; ++i) {
@@ -59,7 +67,6 @@ int main(int argc, char* argv[]) {
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
-
 #pragma omp parallel for
         for (int i = 0; i < num_mystify_lines; i++) {
             update_mystify_line(&mystify_lines[i]);
@@ -82,7 +89,6 @@ int main(int argc, char* argv[]) {
             }
             render_circle(&circles[i], renderer);
         }
-
 
         frameTime = SDL_GetTicks() - frameStart;
 
