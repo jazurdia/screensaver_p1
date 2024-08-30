@@ -149,7 +149,7 @@ Estos parámetros son los solicitados al usuario al ejecutar la aplicación, en 
 Para poder proporcionar estos valores de debe compilar el programa, siempre con [CLion](https://www.jetbrains.com/es-es/clion/download/#section=windows) y luego desde la terminal usar el siguiente comando.
 
 ```bash title="Ejecución del programa con terminal"
-screensaver_p1.exe numLines numCircles
+./screensaver_p1.exe numLines numCircles
 ```
 
 ### Comportamiento del Screensaver
